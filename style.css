@@ -1,0 +1,133 @@
+/* ------------------------------------------------------------------
+   Board palette – driven by CSS variables so the "Board appearance"
+   panel can change colours instantly. Defaults = Chess.com green.
+   ------------------------------------------------------------------ */
+:root {
+  --sq-light: #ebecd0;
+  --sq-dark: #739552;
+  --hl-from: rgba(247, 247, 105, 0.55);
+  --hl-to: rgba(247, 247, 105, 0.8);
+}
+
+.white-1e1d7 {
+  background-color: var(--sq-light) !important;
+  color: var(--sq-dark) !important;
+}
+
+.black-3c85d {
+  background-color: var(--sq-dark) !important;
+  color: var(--sq-light) !important;
+}
+
+/* Last-move highlight: a tint painted OVER the square colour (inset shadow), so any theme works */
+.highlight-from {
+  box-shadow: inset 0 0 0 100vmax var(--hl-from) !important;
+}
+
+.highlight-to {
+  box-shadow: inset 0 0 0 100vmax var(--hl-to) !important;
+}
+
+/* Coordinates on/off */
+#board.hide-coords .notation-322f9 {
+  display: none !important;
+}
+
+/* ------------------------------------------------------------------
+   Pieces. NO css transition / will-change here any more: chessboard.js
+   used to animate top/left with jQuery while CSS animated the same
+   properties a second time (= stutter), and 32 "will-change" layers are
+   heavy on phones. Pieces are now slid with a GPU transform from app.js.
+   ------------------------------------------------------------------ */
+.piece-417db {
+  -webkit-user-drag: none;
+  user-select: none;
+  backface-visibility: hidden;
+}
+
+.piece-sliding {
+  position: relative;
+  z-index: 60;
+  will-change: transform;   /* only the 1-2 moving pieces get a layer, only while moving */
+}
+
+.piece-ghost {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------
+   Board appearance panel
+   ------------------------------------------------------------------ */
+.theme-swatch {
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+
+.theme-swatch:hover { transform: translateY(-1px); }
+.theme-swatch.selected { border-color: #81b64c; box-shadow: 0 0 0 2px rgba(129, 182, 76, 0.35); }
+.theme-swatch i { display: block; }
+
+.color-chip {
+  width: 100%;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #4a4742;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+}
+.color-chip::-webkit-color-swatch-wrapper { padding: 0; }
+.color-chip::-webkit-color-swatch { border: none; border-radius: 5px; }
+.color-chip::-moz-color-swatch { border: none; border-radius: 5px; }
+
+#boardSizeRange { accent-color: #81b64c; }
+#coordsToggle { accent-color: #81b64c; }
+
+/* Scrollbar beautification */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1b1a17;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #363430;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a4742;
+}
+
+/* Move history selection styles */
+.move-row.active {
+  background-color: rgba(129, 182, 76, 0.18) !important;
+  border-left: 3px solid #81b64c;
+}
+
+.move-cell.active-move {
+  background-color: #81b64c !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  border-radius: 4px;
+}
+
+/* Board aspect ratio safety */
+#board {
+  touch-action: manipulation;
+}
